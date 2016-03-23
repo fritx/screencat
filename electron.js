@@ -46,12 +46,12 @@ ipc.on('error', function error (ev, err) {
 
 ipc.on('create-window', function (ev, config) {
   console.log('create-window', [config])
-  mb.app.dock.show()
+  if (mb.app.dock) mb.app.dock.show()
   win = new BrowserWindow({width: 720, height: 445})
   win.loadUrl('file://' + path.join(__dirname, 'screen.html'))
 
   win.on('closed', function () {
-    mb.app.dock.hide()
+    if (mb.app.dock) mb.app.dock.hide()
     mb.window.webContents.send('disconnected', true)
   })
 
