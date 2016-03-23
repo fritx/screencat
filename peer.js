@@ -159,12 +159,19 @@ module.exports = function create () {
         getUserMedia(constraints, function (videoStream) {
           // audio
           getUserMedia({audio: true, video: false}, function (audioStream) {
+            initPeer(videoStream, audioStream)
+          // }, function (err) { handleRTCErr(err, cb) })
+          }, function () {
+            initPeer(videoStream)
+          })
+
+          function initPeer (videoStream, audioStream) {
             peer = new SimplePeer({ initiator: true, trickle: false, config: config })
             peer._pc.addStream(videoStream)
-            peer._pc.addStream(audioStream)
+            if (audioStream) peer._pc.addStream(audioStream)
             pc.emit('waiting-for-peer')
             cb(null, peer)
-          }, function (err) { handleRTCErr(err, cb) })
+          }
         }, function (err) { handleRTCErr(err, cb) })
       }
     }
