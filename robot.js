@@ -4,14 +4,16 @@ window.robot = robot
 var vkey = require('vkey')
 
 module.exports = function createEvents (data) {
-  if (data.click) {
+  // if (data.click) {
+  if (data.mouse) {
     var x = scale(data.clientX, 0, data.canvasWidth, 0, screen.width)
     var y = scale(data.clientY, 0, data.canvasHeight, 0, screen.height)
     var pos = robot.getMousePos() // hosts current x/y
     robot.moveMouse(x, y) // move to remotes pos
-    robot.mouseToggle('up', 'left') // set mouse position to up
-    robot.mouseClick() // click on remote click spot
-    robot.moveMouse(pos.x, pos.y) // go back to hosts position
+    var button = { '1': 'left', '2': 'middle', '3': 'right' }[data.which]
+    robot.mouseToggle(data.mouse, button) // set mouse position to up
+    // robot.mouseClick() // click on remote click spot
+    // robot.moveMouse(pos.x, pos.y) // go back to hosts position
   }
 
   if (data.keyCode) {

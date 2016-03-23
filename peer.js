@@ -216,6 +216,7 @@ module.exports = function create () {
 
     if (remote) {
       window.addEventListener('mouseup', mouseupListener)
+      window.addEventListener('mousedown', mousedownListener)
       window.addEventListener('keydown', keydownListener)
     }
 
@@ -230,13 +231,23 @@ module.exports = function create () {
 
     peer.on('close', function cleanup () {
       window.removeEventListener('mouseup', mouseupListener)
+      window.removeEventListener('mousedown', mousedownListener)
       window.removeEventListener('keydown', keydownListener)
     })
 
     function mouseupListener (e) {
       var data = getMouseData(e)
-      data.click = true
+      data.mouse = 'up'
+      data.which = e.which
       console.log('send mouseup', data)
+      peer.send(data)
+    }
+
+    function mousedownListener (e) {
+      var data = getMouseData(e)
+      data.mouse = 'down'
+      data.which = e.which
+      console.log('send mousedown', data)
       peer.send(data)
     }
 
